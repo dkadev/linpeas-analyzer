@@ -17,6 +17,10 @@ def download_linpeas():
 def get_openai_api_key():
     return os.getenv("OPENAI_API_KEY")
 
+def format_message(message):
+    formatted_message = "\n".join(line.strip() for line in message.split("\n") if line.strip())
+    return formatted_message
+
 def analyze_output(file_path):
     with open(file_path, "r") as file:
         output = file.read()
@@ -42,7 +46,8 @@ def analyze_output(file_path):
     )
 
     print("GPT API Comprehensive Analysis Result:")
-    print(completion.choices[0].message)
+    formatted_message = format_message(completion.choices[0].message)
+    print(formatted_message)
 
 def main():
     parser = argparse.ArgumentParser(description="LinPEAS Analyzer")
