@@ -2,6 +2,7 @@ import argparse
 import requests
 import os
 import openai
+from openai import OpenAI
 import dotenv
 
 dotenv.load_dotenv()
@@ -27,9 +28,11 @@ def analyze_output(file_path):
     
     openai.api_key = api_key
 
+    client = OpenAI()
+
     # Use Chat Completions API for a comprehensive analysis
-    response = openai.ChatCompletion.create(
-        model="o1-mini",
+    completion = client.chat.completions.create(
+        model="gpt-4o-mini",
         messages=[
             {"role": "system", "content": "You are a helpful assistant for analyzing linPEAS outputs."},
             {"role": "user", "content": f"Analyze the following linPEAS output for potential privilege escalation paths:\n\n{output}"}
@@ -39,7 +42,7 @@ def analyze_output(file_path):
     )
 
     print("GPT API Comprehensive Analysis Result:")
-    print(response.choices[0].message['content'].strip())
+    print(completion.choices[0].message)
 
 def main():
     parser = argparse.ArgumentParser(description="LinPEAS Analyzer")
