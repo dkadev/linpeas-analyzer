@@ -32,6 +32,10 @@ LinPEAS Analyzer supports the following command options:
 
 - `-d`, `--download`: Download the latest version of the linPEAS script.
 - `-a`, `--analyze-output`: Analyze the output of the linPEAS script using the GPT API.
+- `--model`: Specify the model to use for analysis.
+- `--max-tokens`: Specify the maximum number of tokens for the response.
+- `--temperature`: Specify the temperature for response variability.
+- `--config-file`: Specify a YAML configuration file for settings.
 
 ## OpenAI API Key Configuration
 
@@ -55,4 +59,16 @@ python linpeas_analyzer.py -d
 
 ```
 python linpeas_analyzer.py -a /path/to/linpeas/output.txt
+```
+
+3. Analyze the output of the linPEAS script with optional arguments:
+
+```
+python linpeas_analyzer.py -a /path/to/linpeas/output.txt --model gpt-4 --max-tokens 1000 --temperature 0.5
+```
+
+4. Analyze the output of the linPEAS script using a configuration file:
+
+```
+python linpeas_analyzer.py -a /path/to/linpeas/output.txt --config-file config.yaml
 ```

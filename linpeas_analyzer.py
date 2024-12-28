@@ -4,6 +4,7 @@ import os
 import openai
 from openai import OpenAI
 import dotenv
+import yaml
 from rich.console import Console
 from rich.markdown import Markdown
 
@@ -23,7 +24,7 @@ def format_message(message):
     formatted_message = "\n".join(line.strip() for line in message.split("\n") if line.strip())
     return formatted_message
 
-def analyze_output(file_path):
+def analyze_output(file_path, model, max_tokens, temperature):
     with open(file_path, "r") as file:
         output = file.read()
     
@@ -38,13 +39,13 @@ def analyze_output(file_path):
 
     # Use Chat Completions API for a comprehensive analysis
     completion = client.chat.completions.create(
-        model="gpt-4o-mini",
+        model=model,
         messages=[
             {"role": "system", "content": "You are a helpful assistant for analyzing linPEAS outputs."},
             {"role": "user", "content": f"Analyze the following linPEAS output for potential privilege escalation paths:\n\n{output}"}
         ],
-        max_tokens=500,  # Adjust max_tokens as needed
-        temperature=0.7  # Adjust temperature for response variability
+        max_tokens=max_tokens,
+        temperature=temperature
     )
 
     print("GPT API Comprehensive Analysis Result:")
@@ -59,12 +60,27 @@ def main():
     parser = argparse.ArgumentParser(description="LinPEAS Analyzer")
     parser.add_argument("-d", "--download", action="store_true", help="Download the latest version of the linPEAS script.")
     parser.add_argument("-a", "--analyze-output", type=str, help="Analyze the output of the linPEAS script using the GPT API.")
+    parser.add_argument("--model", type=str, default="gpt-4o-mini", help="Specify the model to use for analysis.")
+    parser.add_argument("--max-tokens", type=int, default=500, help="Specify the maximum number of tokens for the response.")
+    parser.add_argument("--temperature", type=float, default=0.7, help="Specify the temperature for response variability.")
+    parser.add_argument("--config-file", type=str, help="Specify a YAML configuration file for settings.")
     args = parser.parse_args()
+
+    if args.config_file:
+        with open(args.config_file, "r") as file:
+            config = yaml.safe_load(file)
+            model = config.get("model", "gpt-4o-mini")
+            max_tokens = config.get("max_tokens", 500)
+            temperature = config.get("temperature", 0.7)
+    else:
+        model = args.model
+        max_tokens = args.max_tokens
+        temperature = args.temperature
 
     if args.download:
         download_linpeas()
     elif args.analyze_output:
-        analyze_output(args.analyze_output)
+        analyze_output(args.analyze_output, model, max_tokens, temperature)
     else:
         parser.print_help()
 
