@@ -30,8 +30,8 @@ To use LinPEAS Analyzer, follow these steps:
 
 LinPEAS Analyzer supports the following command options:
 
-- `--download`: Download the latest version of the linPEAS script.
-- `--analyze-output`: Analyze the output of the linPEAS script using the GPT API.
+- `-d`, `--download`: Download the latest version of the linPEAS script.
+- `-a`, `--analyze-output`: Analyze the output of the linPEAS script using the GPT API.
 
 ## OpenAI API Key Configuration
 
@@ -48,11 +48,11 @@ Replace `YOUR_API_KEY` with your actual OpenAI API key.
 1. Download the latest linPEAS script:
 
 ```
-python linpeas_analyzer.py --download
+python linpeas_analyzer.py -d
 ```
 
 2. Analyze the output of the linPEAS script:
 
 ```
-python linpeas_analyzer.py --analyze-output /path/to/linpeas/output.txt
+python linpeas_analyzer.py -a /path/to/linpeas/output.txt
 ```
