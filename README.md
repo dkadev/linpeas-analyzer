@@ -63,3 +63,13 @@ python linpeas_analyzer.py --configure-api-key YOUR_API_KEY
 ```
 python linpeas_analyzer.py --analyze-output /path/to/linpeas/output.txt
 ```
+
+## Note
+
+Ensure that you have a `config.txt` file in the same directory as `linpeas_analyzer.py` with the following content:
+
+```
+OPENAI_API_KEY=YOUR_API_KEY
+```
+
+Replace `YOUR_API_KEY` with your actual OpenAI API key.
