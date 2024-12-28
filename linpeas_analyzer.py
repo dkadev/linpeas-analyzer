@@ -10,6 +10,16 @@ from rich.markdown import Markdown
 
 dotenv.load_dotenv()
 
+def print_banner():
+    banner = """
+#  ▗▖   ▗▄▄▄▖▗▖  ▗▖▗▄▄▖ ▗▄▄▄▖ ▗▄▖  ▗▄▄▖     ▗▄▖ ▗▖  ▗▖ ▗▄▖ ▗▖ ▗▖  ▗▖▗▄▄▄▄▖▗▄▄▄▖▗▄▄▖ 
+#  ▐▌     █  ▐▛▚▖▐▌▐▌ ▐▌▐▌   ▐▌ ▐▌▐▌       ▐▌ ▐▌▐▛▚▖▐▌▐▌ ▐▌▐▌  ▝▚▞▘    ▗▞▘▐▌   ▐▌ ▐▌
+#  ▐▌     █  ▐▌ ▝▜▌▐▛▀▘ ▐▛▀▀▘▐▛▀▜▌ ▝▀▚▖    ▐▛▀▜▌▐▌ ▝▜▌▐▛▀▜▌▐▌   ▐▌   ▗▞▘  ▐▛▀▀▘▐▛▀▚▖
+#  ▐▙▄▄▖▗▄█▄▖▐▌  ▐▌▐▌   ▐▙▄▄▖▐▌ ▐▌▗▄▄▞▘    ▐▌ ▐▌▐▌  ▐▌▐▌ ▐▌▐▙▄▄▖▐▌  ▐▙▄▄▄▖▐▙▄▄▖▐▌ ▐▌
+#                                                                                   
+    """
+    print(banner)
+
 def download_linpeas():
     url = "https://github.com/peass-ng/PEASS-ng/releases/latest/download/linpeas.sh"
     response = requests.get(url)
@@ -37,6 +47,8 @@ def analyze_output(file_path, model, max_tokens, temperature):
 
     client = OpenAI()
 
+    print("Analyzing linPEAS output using GPT API...")
+
     # Use Chat Completions API for a comprehensive analysis
     completion = client.chat.completions.create(
         model=model,
@@ -57,6 +69,7 @@ def analyze_output(file_path, model, max_tokens, temperature):
     console.print(md)
 
 def main():
+    print_banner()
     parser = argparse.ArgumentParser(description="LinPEAS Analyzer")
     parser.add_argument("-d", "--download", action="store_true", help="Download the latest version of the linPEAS script.")
     parser.add_argument("-a", "--analyze-output", type=str, help="Analyze the output of the linPEAS script using the GPT API.")
