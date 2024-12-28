@@ -4,6 +4,8 @@ import os
 import openai
 from openai import OpenAI
 import dotenv
+from rich.console import Console
+from rich.markdown import Markdown
 
 dotenv.load_dotenv()
 
@@ -16,6 +18,10 @@ def download_linpeas():
 
 def get_openai_api_key():
     return os.getenv("OPENAI_API_KEY")
+
+def format_message(message):
+    formatted_message = "\n".join(line.strip() for line in message.split("\n") if line.strip())
+    return formatted_message
 
 def analyze_output(file_path):
     with open(file_path, "r") as file:
@@ -42,7 +48,12 @@ def analyze_output(file_path):
     )
 
     print("GPT API Comprehensive Analysis Result:")
-    print(completion.choices[0].message)
+    formatted_message = format_message(completion.choices[0].message.content)
+
+    console = Console()
+
+    md = Markdown(formatted_message)
+    console.print(md)
 
 def main():
     parser = argparse.ArgumentParser(description="LinPEAS Analyzer")
