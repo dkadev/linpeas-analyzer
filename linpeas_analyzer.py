@@ -4,6 +4,8 @@ import os
 import openai
 from openai import OpenAI
 import dotenv
+from rich.console import Console
+from rich.markdown import Markdown
 
 dotenv.load_dotenv()
 
@@ -46,8 +48,12 @@ def analyze_output(file_path):
     )
 
     print("GPT API Comprehensive Analysis Result:")
-    formatted_message = format_message(completion.choices[0].message)
-    print(formatted_message)
+    formatted_message = format_message(completion.choices[0].message.content)
+
+    console = Console()
+
+    md = Markdown(formatted_message)
+    console.print(md)
 
 def main():
     parser = argparse.ArgumentParser(description="LinPEAS Analyzer")
