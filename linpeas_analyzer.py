@@ -43,8 +43,8 @@ def analyze_output(file_path):
 
 def main():
     parser = argparse.ArgumentParser(description="LinPEAS Analyzer")
-    parser.add_argument("--download", action="store_true", help="Download the latest version of the linPEAS script.")
-    parser.add_argument("--analyze-output", type=str, help="Analyze the output of the linPEAS script using the GPT API.")
+    parser.add_argument("-d", "--download", action="store_true", help="Download the latest version of the linPEAS script.")
+    parser.add_argument("-a", "--analyze-output", type=str, help="Analyze the output of the linPEAS script using the GPT API.")
     args = parser.parse_args()
 
     if args.download:
