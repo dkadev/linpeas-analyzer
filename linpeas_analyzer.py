@@ -15,11 +15,37 @@ def configure_api_key(api_key):
         file.write(f"OPENAI_API_KEY={api_key}")
     print("Configured OpenAI API key.")
 
+def get_openai_api_key():
+    with open("config.txt", "r") as file:
+        for line in file:
+            if line.startswith("OPENAI_API_KEY="):
+                return line.strip().split("=")[1]
+    return None
+
 def analyze_output(file_path):
     with open(file_path, "r") as file:
         output = file.read()
-    # Placeholder for GPT API analysis
-    print("Analyzed linPEAS output using GPT API.")
+    
+    api_key = get_openai_api_key()
+    if not api_key:
+        print("OpenAI API key not configured. Please configure it using --configure-api-key option.")
+        return
+    
+    openai.api_key = api_key
+
+    # Use Chat Completions API for a comprehensive analysis
+    response = openai.ChatCompletion.create(
+        model="o1-mini",
+        messages=[
+            {"role": "system", "content": "You are a helpful assistant for analyzing linPEAS outputs."},
+            {"role": "user", "content": f"Analyze the following linPEAS output for potential privilege escalation paths:\n\n{output}"}
+        ],
+        max_tokens=500,  # Adjust max_tokens as needed
+        temperature=0.7  # Adjust temperature for response variability
+    )
+
+    print("GPT API Comprehensive Analysis Result:")
+    print(response.choices[0].message['content'].strip())
 
 def main():
     parser = argparse.ArgumentParser(description="LinPEAS Analyzer")
