@@ -2,3 +2,4 @@ argparse
 requests
 os
 openai
+python-dotenv

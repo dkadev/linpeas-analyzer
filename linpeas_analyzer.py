@@ -2,6 +2,9 @@ import argparse
 import requests
 import os
 import openai
+import dotenv
+
+dotenv.load_dotenv()
 
 def download_linpeas():
     url = "https://github.com/peass-ng/PEASS-ng/releases/latest/download/linpeas.sh"
@@ -10,17 +13,8 @@ def download_linpeas():
         file.write(response.content)
     print("Downloaded the latest linPEAS script.")
 
-def configure_api_key(api_key):
-    with open("config.txt", "w") as file:
-        file.write(f"OPENAI_API_KEY={api_key}")
-    print("Configured OpenAI API key.")
-
 def get_openai_api_key():
-    with open("config.txt", "r") as file:
-        for line in file:
-            if line.startswith("OPENAI_API_KEY="):
-                return line.strip().split("=")[1]
-    return None
+    return os.getenv("OPENAI_API_KEY")
 
 def analyze_output(file_path):
     with open(file_path, "r") as file:
@@ -50,14 +44,11 @@ def analyze_output(file_path):
 def main():
     parser = argparse.ArgumentParser(description="LinPEAS Analyzer")
     parser.add_argument("--download", action="store_true", help="Download the latest version of the linPEAS script.")
-    parser.add_argument("--configure-api-key", type=str, help="Configure your OpenAI API key.")
     parser.add_argument("--analyze-output", type=str, help="Analyze the output of the linPEAS script using the GPT API.")
     args = parser.parse_args()
 
     if args.download:
         download_linpeas()
-    elif args.configure_api_key:
-        configure_api_key(args.configure_api_key)
     elif args.analyze_output:
         analyze_output(args.analyze_output)
     else:
