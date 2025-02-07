@@ -28,6 +28,7 @@ LinPEAS Analyzer supports the following command options:
 - `--max-tokens`: Specify the maximum number of tokens for the response.
 - `--temperature`: Specify the temperature for response variability.
 - `--config-file`: Specify a YAML configuration file for settings.
+- `--user`: Specify the user that is running linpeas.
 
 ## OpenAI API Key Configuration
 
@@ -63,4 +64,10 @@ Analyze the output of the linPEAS script using a configuration file:
 
 ```shell
 python linpeas_analyzer.py -a /path/to/linpeas/output.txt --config-file config.yaml
+```
+
+Analyze the output of the linPEAS script specifying the user:
+
+```shell
+python linpeas_analyzer.py -a /path/to/linpeas/output.txt --user username
 ```
