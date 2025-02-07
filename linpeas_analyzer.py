@@ -34,7 +34,7 @@ def format_message(message):
     formatted_message = "\n".join(line.strip() for line in message.split("\n") if line.strip())
     return formatted_message
 
-def analyze_output(file_path, model, max_tokens, temperature):
+def analyze_output(file_path, model, max_tokens, temperature, user):
     with open(file_path, "r") as file:
         output = file.read()
     
@@ -53,8 +53,8 @@ def analyze_output(file_path, model, max_tokens, temperature):
     completion = client.chat.completions.create(
         model=model,
         messages=[
-            {"role": "system", "content": "You are a helpful assistant for analyzing linPEAS outputs."},
-            {"role": "user", "content": f"Analyze the following linPEAS output for potential privilege escalation paths:\n\n{output}"}
+            {"role": "system", "content": "You are a helpful assistant for analyzing linPEAS outputs. Focus on providing quick ways of privilege escalation or lateral movement. Ensure the output is in an ordered markdown format. Include command examples to try. Add a top-ranking summary of next moves at the end."},
+            {"role": "user", "content": f"Analyze the following linPEAS output for potential privilege escalation paths. The user running linpeas is: {user}.\n\n{output}"}
         ],
         max_tokens=max_tokens,
         temperature=temperature
@@ -77,6 +77,7 @@ def main():
     parser.add_argument("--max-tokens", type=int, default=500, help="Specify the maximum number of tokens for the response.")
     parser.add_argument("--temperature", type=float, default=0.7, help="Specify the temperature for response variability.")
     parser.add_argument("--config-file", type=str, help="Specify a YAML configuration file for settings.")
+    parser.add_argument("--user", type=str, help="Specify the user that is running linpeas.")
     args = parser.parse_args()
 
     if args.config_file:
@@ -85,15 +86,17 @@ def main():
             model = config.get("model", "gpt-4o-mini")
             max_tokens = config.get("max_tokens", 500)
             temperature = config.get("temperature", 0.7)
+            user = config.get("user", "unknown")
     else:
         model = args.model
         max_tokens = args.max_tokens
         temperature = args.temperature
+        user = args.user if args.user else "unknown"
 
     if args.download:
         download_linpeas()
     elif args.analyze_output:
-        analyze_output(args.analyze_output, model, max_tokens, temperature)
+        analyze_output(args.analyze_output, model, max_tokens, temperature, user)
     else:
         parser.print_help()
 
